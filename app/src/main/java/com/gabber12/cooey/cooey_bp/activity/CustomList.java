@@ -31,10 +31,12 @@ public class CustomList extends ArrayAdapter<String> {
     public View getView(int position, View view, ViewGroup parent) {
         LayoutInflater inflater = context.getLayoutInflater();
         View rowView= inflater.inflate(R.layout.list_single, null, true);
-        TextView txtTitle = (TextView) rowView.findViewById(R.id.txt_in_device_list);
+        TextView txtTitle = (TextView) rowView.findViewById(R.id.deviceName);
 
-        txtTitle.setText(web.get(position).deviceId +web.get(position).deviceName);
+        txtTitle.setText(web.get(position).deviceName);
+        TextView txtTitle1 = (TextView) rowView.findViewById(R.id.macAddress);
 
+        txtTitle1.setText(web.get(position).deviceId);
         return rowView;
     }
 

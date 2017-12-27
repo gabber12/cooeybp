@@ -119,10 +119,7 @@ device.type
         setContentView(R.layout.activity_home)
         setSupportActionBar(toolbar)
 
-        fab.setOnClickListener { view ->
-            Snackbar.make(view, "Replace with your own action", Snackbar.LENGTH_LONG)
-                    .setAction("Action", null).show()
-        }
+
         scanButton.setOnClickListener { scanButton.setText(R.string.scanning); scanLeDevice(true); }
         if (!(isBluetoothEnabled() || isLocationEnabled())) {
             getPermissions()
