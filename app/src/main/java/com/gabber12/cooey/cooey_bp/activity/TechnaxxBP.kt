@@ -7,22 +7,12 @@ import android.os.IBinder
 import com.gabber12.cooey.cooey_bp.R
 import com.gabber12.cooey.cooey_bp.service.BluetoothLeService
 import android.content.IntentFilter
-import android.R.attr.button
 import android.util.Log
-import com.gabber12.cooey.cooey_bp.service.GattAttributes.SERVICE_READ_CHANNEL
 import android.bluetooth.BluetoothGattCharacteristic
-import com.gabber12.cooey.cooey_bp.service.GattAttributes.SERVICE_UUID
 import android.bluetooth.BluetoothGattService
 import com.gabber12.cooey.cooey_bp.service.GattAttributes
-import android.R.attr.button
-import android.R.attr.button
-import android.graphics.drawable.AnimationDrawable
-import android.R.attr.button
-import android.R.attr.button
 import android.graphics.Color
 import android.view.View
-import com.gabber12.cooey.cooey_bp.service.GattAttributes.SERVICE_WRITE_CHANNEL
-import com.gabber12.cooey.cooey_bp.service.GattAttributes.SERVICE_UUID
 import com.jjoe64.graphview.series.DataPoint
 import com.jjoe64.graphview.series.DataPointInterface
 import kotlinx.android.synthetic.main.activity_device.*
@@ -30,13 +20,9 @@ import com.jjoe64.graphview.series.LineGraphSeries
 import android.graphics.DashPathEffect
 import android.graphics.Paint
 import com.jjoe64.graphview.GridLabelRenderer
-import com.gabber12.cooey.cooey_bp.service.GattAttributes.hexStringToByteArray
-import com.gabber12.cooey.cooey_bp.service.GattAttributes.SERVICE_WRITE_CHANNEL
-import com.gabber12.cooey.cooey_bp.service.GattAttributes.SERVICE_UUID
-import com.jjoe64.graphview.Viewport
 
 
-class DeviceActivity : AppCompatActivity() {
+class TechnaxxBP : AppCompatActivity() {
     private var mBluetoothLeService: BluetoothLeService? = null
     private var mDeviceAddress: String? = null
     private var mConnected: Boolean = false
@@ -51,26 +37,26 @@ class DeviceActivity : AppCompatActivity() {
         override fun onReceive(context: Context?, intent: Intent?) {
             val action = intent?.getAction()
             if (BluetoothLeService.ACTION_GATT_CONNECTED == action) {
-                this@DeviceActivity.mConnected = true
-                this@DeviceActivity.updateConnectionState(R.string.connected)
+                this@TechnaxxBP.mConnected = true
+                this@TechnaxxBP.updateConnectionState(R.string.connected)
             } else if (BluetoothLeService.ACTION_GATT_DISCONNECTED == action) {
-                this@DeviceActivity.mConnected = false
-                this@DeviceActivity.updateConnectionState(R.string.disconnected)
+                this@TechnaxxBP.mConnected = false
+                this@TechnaxxBP.updateConnectionState(R.string.disconnected)
             } else if (BluetoothLeService.ACTION_GATT_SERVICES_DISCOVERED == action) {
-                this@DeviceActivity.displayGattServices(this@DeviceActivity.mBluetoothLeService?.getSupportedGattServices())
-                this@DeviceActivity.updateConnectionStateForButton(R.string.start)
+                this@TechnaxxBP.displayGattServices(this@TechnaxxBP.mBluetoothLeService?.getSupportedGattServices())
+                this@TechnaxxBP.updateConnectionStateForButton(R.string.start)
             } else if (BluetoothLeService.ACTION_DATA_AVAILABLE != action) {
             } else {
 
                 if (intent.getStringExtra(BluetoothLeService.EXTRA_DATA_BATTERY_STATUS) != null) {
                     Log.i("Device", intent.getStringExtra(BluetoothLeService.EXTRA_DATA_BATTERY_STATUS))
-                    this@DeviceActivity.updateDataBatteryStatus(intent.getStringExtra(BluetoothLeService.EXTRA_DATA_BATTERY_STATUS))
+                    this@TechnaxxBP.updateDataBatteryStatus(intent.getStringExtra(BluetoothLeService.EXTRA_DATA_BATTERY_STATUS))
                 } else if (intent.getStringExtra(BluetoothLeService.EXTRA_DATA_SYSTOLIC_PROGRESS) != null) {
-                    this@DeviceActivity.updateDataSystolicValues(intent.getStringExtra(BluetoothLeService.EXTRA_DATA_SYSTOLIC_PROGRESS))
+                    this@TechnaxxBP.updateDataSystolicValues(intent.getStringExtra(BluetoothLeService.EXTRA_DATA_SYSTOLIC_PROGRESS))
                 } else if (intent.getIntExtra(BluetoothLeService.EXTRA_DATA_BP_SYSTOLIC, 0) !== 0 && intent.getIntExtra(BluetoothLeService.EXTRA_DATA_BP_DIASTOLIC, 0) !== 0 && intent.getIntExtra(BluetoothLeService.EXTRA_DATA_BP_HEART_RATE, 0) !== 0) {
-                    this@DeviceActivity.updateBPValues(intent.getIntExtra(BluetoothLeService.EXTRA_DATA_BP_SYSTOLIC, 0), intent.getIntExtra(BluetoothLeService.EXTRA_DATA_BP_DIASTOLIC, 0), intent.getIntExtra(BluetoothLeService.EXTRA_DATA_BP_HEART_RATE, 0))
+                    this@TechnaxxBP.updateBPValues(intent.getIntExtra(BluetoothLeService.EXTRA_DATA_BP_SYSTOLIC, 0), intent.getIntExtra(BluetoothLeService.EXTRA_DATA_BP_DIASTOLIC, 0), intent.getIntExtra(BluetoothLeService.EXTRA_DATA_BP_HEART_RATE, 0))
                 } else if (intent.getStringExtra(BluetoothLeService.EXTRA_DATA_ERROR) != null) {
-                    this@DeviceActivity.updateErrorDetails(intent.getStringExtra(BluetoothLeService.EXTRA_DATA_ERROR))
+                    this@TechnaxxBP.updateErrorDetails(intent.getStringExtra(BluetoothLeService.EXTRA_DATA_ERROR))
                 }
             }
         }
@@ -80,17 +66,17 @@ class DeviceActivity : AppCompatActivity() {
 
 
         override fun onServiceConnected(componentName: ComponentName, service: IBinder) {
-            this@DeviceActivity.mBluetoothLeService = (service as BluetoothLeService.LocalBinder)?.getService();
-            if (!this@DeviceActivity.mBluetoothLeService!!.initialize()) {
+            this@TechnaxxBP.mBluetoothLeService = (service as BluetoothLeService.LocalBinder)?.getService();
+            if (!this@TechnaxxBP.mBluetoothLeService!!.initialize()) {
 
-                this@DeviceActivity.finish();
+                this@TechnaxxBP.finish();
             }
-            this@DeviceActivity.mBluetoothLeService!!.connect(this@DeviceActivity.mDeviceAddress);
+            this@TechnaxxBP.mBluetoothLeService!!.connect(this@TechnaxxBP.mDeviceAddress);
         }
 
 
         override fun onServiceDisconnected( componentName: ComponentName) {
-            this@DeviceActivity.mBluetoothLeService = null;
+            this@TechnaxxBP.mBluetoothLeService = null;
         }
     })
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -127,12 +113,12 @@ class DeviceActivity : AppCompatActivity() {
 
         startMeasurement.setOnClickListener((object: View.OnClickListener {
             override fun onClick(p0: View?) {
-                for (gattService in this@DeviceActivity?.mBluetoothLeService?.getSupportedGattServices()!!) {
+                for (gattService in this@TechnaxxBP?.mBluetoothLeService?.getSupportedGattServices()!!) {
                     if (gattService.getUuid().toString() == GattAttributes.SERVICE_UUID) {
                         for (gattCharacteristic in gattService.getCharacteristics()) {
                             if (gattCharacteristic.getUuid().toString() == GattAttributes.SERVICE_WRITE_CHANNEL) {
                                 val isValueWritten = gattCharacteristic.setValue(GattAttributes.hexStringToByteArray("0x0240dc01a13c"))
-                                this@DeviceActivity.mBluetoothLeService?.writeCharacteristic(gattCharacteristic)
+                                this@TechnaxxBP.mBluetoothLeService?.writeCharacteristic(gattCharacteristic)
                             }
                         }
                     }
@@ -191,9 +177,9 @@ class DeviceActivity : AppCompatActivity() {
     private fun updateConnectionState(resourceId: Int) {
         runOnUiThread {
             if (resourceId == R.string.connected) {
-                this@DeviceActivity.progressBar.visibility = View.GONE
+                this@TechnaxxBP.progressBar.visibility = View.GONE
             }
-            this@DeviceActivity.connectionStatus.setText(resourceId)
+            this@TechnaxxBP.connectionStatus.setText(resourceId)
         }
     }
     private fun displayData(bluetoothGattCharacteristic: BluetoothGattCharacteristic) {

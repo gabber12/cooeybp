@@ -2,22 +2,14 @@ package com.gabber12.cooey.cooey_bp.activity
 
 import android.Manifest
 import android.os.Bundle
-import android.support.design.widget.Snackbar
 import android.support.v7.app.AppCompatActivity
 import com.gabber12.cooey.cooey_bp.R
 
 import kotlinx.android.synthetic.main.activity_home.*
-import android.content.Context.BIND_AUTO_CREATE
 import com.gabber12.cooey.cooey_bp.service.BluetoothLeService
-import android.R.attr.button
-import com.gabber12.cooey.cooey_bp.service.GattAttributes.SERVICE_READ_CHANNEL
-import com.gabber12.cooey.cooey_bp.service.GattAttributes.SERVICE_UUID
-import android.Manifest.permission
-import android.Manifest.permission.ACCESS_COARSE_LOCATION
 import android.annotation.SuppressLint
 import android.support.v4.content.ContextCompat
 import android.os.Build.VERSION
-import android.R.attr.button
 import android.bluetooth.*
 import android.content.*
 import com.gabber12.cooey.cooey_bp.service.GattAttributes
@@ -138,7 +130,13 @@ device.type
         device_list.adapter = adapter
         device_list.onItemClickListener = (object: AdapterView.OnItemClickListener{
             override fun onItemClick(p0: AdapterView<*>?, p1: View?, p2: Int, p3: Long) {
-                val intent = Intent(applicationContext, DeviceActivity::class.java)
+                // get device type
+                var activity = TechnaxxBP::class.java
+//                if(type == DeviceType.TECHMAXX) {
+                    activity =  TechnaxxBP::class.java
+//                }
+
+                val intent = Intent(applicationContext, activity) //rep
                 intent.putExtra("deviceId", deviceList.get(p2).deviceId)
                 startActivity(intent)
             }
