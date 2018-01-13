@@ -54,24 +54,40 @@ class HomeActivity : AppCompatActivity() {
                     if (null != device) {
 
 
-                        val deviceName = device.getName();
+                        var deviceName = device.getName();
                         val address:String = device.address
+                        var deviceLabel = device.getName();
                         Log.i("Home", "Discovered " + deviceName + " "+ address)
-device.type
+                        //device.type
                         if (address != null && address.length > 0) {
                             Log.i("Home", address+ deviceName);
                             if(deviceHash.containsKey(address)) {
                                 return;
                             }
-
-                            deviceList.add(Device(address, deviceName));
+                            if(deviceName == "01257B2C2BCB33"){
+                                deviceLabel = deviceName
+                                deviceName = "Cooey Body Analyzer(Mock)"
+                            }
+                            if(deviceName == "Technaxx BP"){
+                                deviceLabel = deviceName
+                                deviceName = "Cooey BP Meter"
+                            }
+                            if(deviceName == "11257B"){
+                                deviceLabel = deviceName
+                                deviceName = "Cooey Body Analyzer"
+                            }
+                            if(deviceName == ""){
+                                deviceLabel = deviceName
+                                deviceName = "Unknown"
+                            }
+                            deviceList.add(Device(address, deviceName, deviceLabel));
                             adapter?.notifyDataSetChanged()
                             deviceHash.put(address, true);
-                            if (deviceName.equals("Technaxx BP", true) || deviceName.equals("BPM-188", true)) {
-
-
-
-                            }
+//                            if (deviceName.equals("Technaxx BP", true) || deviceName.equals("BPM-188", true)) {
+//
+//
+//
+//                            }
                         }
                     }
                 }
@@ -112,7 +128,13 @@ device.type
         setSupportActionBar(toolbar)
 
 
-        scanButton.setOnClickListener { scanButton.setText(R.string.scanning); scanLeDevice(true); }
+        scanButton.setOnClickListener {
+            scanButton.setText(R.string.scanning);
+            deviceList.clear()
+            deviceHash.clear()
+            scanLeDevice(true);
+            adapter?.notifyDataSetChanged()
+        }
         if (!(isBluetoothEnabled() || isLocationEnabled())) {
             getPermissions()
         }
@@ -129,15 +151,19 @@ device.type
         adapter = CustomList(this, deviceList)
         device_list.adapter = adapter
         device_list.onItemClickListener = (object: AdapterView.OnItemClickListener{
-            override fun onItemClick(p0: AdapterView<*>?, p1: View?, p2: Int, p3: Long) {
+            override fun onItemClick(p0: AdapterView<*>?, p1: View?, position: Int, id: Long) {
                 // get device type
+                var device: Device = deviceList[position]
+
                 var activity = TechnaxxBP::class.java
-//                if(type == DeviceType.TECHMAXX) {
-                    activity =  TechnaxxBP::class.java
-//                }
+               if(device.deviceName == "Technaxx BP") {
+                    var activity =  TechnaxxBP::class.java
+                } else {
+                   var activity =  CooeyBodyAnalyzer::class.java
+                }
 
                 val intent = Intent(applicationContext, activity) //rep
-                intent.putExtra("deviceId", deviceList.get(p2).deviceId)
+                intent.putExtra("deviceId", deviceList.get(position).deviceId)
                 startActivity(intent)
             }
         });

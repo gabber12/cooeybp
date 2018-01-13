@@ -12,12 +12,14 @@ import android.support.v7.app.AppCompatActivity
 import android.util.Log
 import android.view.View
 import com.gabber12.cooey.cooey_bp.R
+import com.gabber12.cooey.cooey_bp.R.id.graph
 import com.gabber12.cooey.cooey_bp.service.BluetoothLeService
 import com.gabber12.cooey.cooey_bp.service.GattAttributes
 import com.jjoe64.graphview.GridLabelRenderer
 import com.jjoe64.graphview.series.DataPoint
 import com.jjoe64.graphview.series.DataPointInterface
 import com.jjoe64.graphview.series.LineGraphSeries
+import kotlinx.android.synthetic.main.activity_device.*
 
 class CooeyBodyAnalyzer : AppCompatActivity() {
     private var mBluetoothLeService: BluetoothLeService? = null
@@ -36,6 +38,7 @@ class CooeyBodyAnalyzer : AppCompatActivity() {
             if (BluetoothLeService.ACTION_GATT_CONNECTED == action) {
                 this@CooeyBodyAnalyzer.mConnected = true
                 this@CooeyBodyAnalyzer.updateConnectionState(R.string.connected)
+                Log.i("Device", "Our new device is now connected ¡¡˚¬¬˚˚asåßΩ≈∂ƒç©©h˘")
             } else if (BluetoothLeService.ACTION_GATT_DISCONNECTED == action) {
                 this@CooeyBodyAnalyzer.mConnected = false
                 this@CooeyBodyAnalyzer.updateConnectionState(R.string.disconnected)
@@ -84,24 +87,24 @@ class CooeyBodyAnalyzer : AppCompatActivity() {
         bindService(Intent(this, BluetoothLeService::class.java), this.mServiceConnection, Context.BIND_AUTO_CREATE)
         registerReceiver(this.mGattUpdateReceiver, makeGattUpdateIntentFilter());
 
-        graph.setTitle("Measurement")
+//        graph.setTitle("Measurement")
+//
+//        graph.pivotY = 0F
+//        graph.pivotX = 0F
+//        val viewport = graph.viewport
+//        viewport.setMaxX(80.0)
+//        viewport.setMinX(0.0)
+//        viewport.setMinY(0.0)
+//        viewport.setMaxY(200.0)
+//        viewport.isXAxisBoundsManual = true
+//        viewport.isYAxisBoundsManual = true
 
-        graph.pivotY = 0F
-        graph.pivotX = 0F
-        val viewport = graph.viewport
-        viewport.setMaxX(80.0)
-        viewport.setMinX(0.0)
-        viewport.setMinY(0.0)
-        viewport.setMaxY(200.0)
-        viewport.isXAxisBoundsManual = true
-        viewport.isYAxisBoundsManual = true
-
-        graph.gridLabelRenderer.isHorizontalLabelsVisible = false
-        graph.gridLabelRenderer.gridColor = R.color.switch_thumb_material_light
-        graph.gridLabelRenderer.gridStyle = GridLabelRenderer.GridStyle.NONE
-
-        prepareSeries(mSeries2, Color.GRAY)
-        graph.addSeries(mSeries2)
+//        graph.gridLabelRenderer.isHorizontalLabelsVisible = false
+//        graph.gridLabelRenderer.gridColor = R.color.switch_thumb_material_light
+//        graph.gridLabelRenderer.gridStyle = GridLabelRenderer.GridStyle.NONE
+//
+//        prepareSeries(mSeries2, Color.GRAY)
+//        graph.addSeries(mSeries2)
 
 //        prepareSeries(mSeries3, Color.BLACK);
 //        graph.addSeries(mSeries3)

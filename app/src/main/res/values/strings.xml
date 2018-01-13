@@ -13,4 +13,9 @@
     <string name="scanning">Scanning</string>
     <string name="connected">Connected</string>
     <string name="start">Start</string>
+    <string-array name="device_names">
+        <item>Technaxx BP</item>
+        <item>Cooey Body Analyzer</item>
+    </string-array>
+
 </resources>
