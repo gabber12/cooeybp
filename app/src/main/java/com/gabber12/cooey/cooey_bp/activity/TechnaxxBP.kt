@@ -120,14 +120,19 @@ class TechnaxxBP : AppCompatActivity() {
 
         startMeasurement.setOnClickListener((object: View.OnClickListener {
             override fun onClick(p0: View?) {
-                if(isCompleted) {
+                if(true || isCompleted) {
                     val intent = Intent(applicationContext, QrCodeScannerActivity::class.java)
                     intent.putExtra("SYSTOLIC",finalReadings?.systolic )
                     intent.putExtra("DISTOLIC",finalReadings?.distolic )
                     intent.putExtra("HEART_RATE",finalReadings?.heartRate )
+
+//                    intent.putExtra("SYSTOLIC",1 )
+//                    intent.putExtra("DISTOLIC",1 )
+//                    intent.putExtra("HEART_RATE",1 )
                     startActivity(intent)
                     return;
                 }
+                startMeasurement.setEnabled(false);
                 for (gattService in this@TechnaxxBP?.mBluetoothLeService?.getSupportedGattServices()!!) {
                     if (gattService.getUuid().toString() == GattAttributes.SERVICE_UUID) {
                         for (gattCharacteristic in gattService.getCharacteristics()) {
@@ -263,6 +268,7 @@ class TechnaxxBP : AppCompatActivity() {
         systolicText.setText(""+systolicValue)
         distolicText.setText(""+diastolicValue)
         hrText.setText(""+heartRateValue)
+        startMeasurement.setEnabled(true);
         checkBPRange(systolicValue, diastolicValue)
     }
 

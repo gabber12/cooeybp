@@ -127,6 +127,9 @@ class HomeActivity : AppCompatActivity() {
         setContentView(R.layout.activity_home)
         setSupportActionBar(toolbar)
 
+        deviceList.clear()
+        deviceHash.clear()
+
 
         scanButton.setOnClickListener {
             scanButton.setText(R.string.scanning);

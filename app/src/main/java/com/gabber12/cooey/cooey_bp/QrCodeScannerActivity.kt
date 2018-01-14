@@ -57,8 +57,8 @@ class QrCodeScannerActivity : AppCompatActivity(), BarcodeReader.BarcodeReaderLi
                         // Display the first 500 characters of the response string.
                         Log.i("Volley Response", response.toString())
                         val jsonObject = JsonParser().parse(response.toString()) as JsonObject
-                        if(jsonObject.get("message").toString() == "Data Uploaded successfully!!!") {
-                            Toast.makeText(applicationContext, "Data has been uploaded successfully !!", Toast.LENGTH_SHORT)
+                        if(jsonObject.get("message").asString == "Data Uploaded successfully!!!") {
+                            Toast.makeText(applicationContext, "Data has been uploaded successfully !!", Toast.LENGTH_SHORT).show()
                             val intent = Intent(applicationContext, HomeActivity::class.java)
                             startActivity(intent)
                         }
