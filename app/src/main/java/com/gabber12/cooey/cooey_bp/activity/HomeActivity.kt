@@ -8,6 +8,7 @@ import com.gabber12.cooey.cooey_bp.R
 import kotlinx.android.synthetic.main.activity_home.*
 import com.gabber12.cooey.cooey_bp.service.BluetoothLeService
 import android.annotation.SuppressLint
+import android.app.Activity
 import android.support.v4.content.ContextCompat
 import android.os.Build.VERSION
 import android.bluetooth.*
@@ -57,6 +58,8 @@ class HomeActivity : AppCompatActivity() {
                         var deviceName = device.getName();
                         val address:String = device.address
                         var deviceLabel = device.getName();
+                        device.type
+
                         Log.i("Home", "Discovered " + deviceName + " "+ address)
                         //device.type
                         if (address != null && address.length > 0) {
@@ -155,15 +158,15 @@ class HomeActivity : AppCompatActivity() {
                 // get device type
                 var device: Device = deviceList[position]
 
-                var activity = TechnaxxBP::class.java
-               if(device.deviceName == "Technaxx BP") {
-                    var activity =  TechnaxxBP::class.java
-                } else {
-                   var activity =  CooeyBodyAnalyzer::class.java
-                }
+//               if(device.deviceName == "Technaxx BP") {
+//                    activity =  TechnaxxBP::class.java
+//                } else {
+//                var activity =  CooeyBodyAnalyzer::class.java
+                var activity =  TechnaxxBP::class.java
+//                }
 
                 val intent = Intent(applicationContext, activity) //rep
-                intent.putExtra("deviceId", deviceList.get(position).deviceId)
+                intent.putExtra("address", deviceList.get(position).address)
                 startActivity(intent)
             }
         });

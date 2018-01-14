@@ -20,6 +20,14 @@ import com.jjoe64.graphview.series.LineGraphSeries
 import android.graphics.DashPathEffect
 import android.graphics.Paint
 import com.jjoe64.graphview.GridLabelRenderer
+import com.roger.catloadinglibrary.CatLoadingView
+import devlight.io.library.ArcProgressStackView
+
+
+
+
+
+
 
 
 class TechnaxxBP : AppCompatActivity() {
@@ -52,8 +60,10 @@ class TechnaxxBP : AppCompatActivity() {
                     Log.i("Device", intent.getStringExtra(BluetoothLeService.EXTRA_DATA_BATTERY_STATUS))
                     this@TechnaxxBP.updateDataBatteryStatus(intent.getStringExtra(BluetoothLeService.EXTRA_DATA_BATTERY_STATUS))
                 } else if (intent.getStringExtra(BluetoothLeService.EXTRA_DATA_SYSTOLIC_PROGRESS) != null) {
+                    readingUpdateView.setText(Integer.parseInt(intent.getStringExtra(BluetoothLeService.EXTRA_DATA_SYSTOLIC_PROGRESS)))
                     this@TechnaxxBP.updateDataSystolicValues(intent.getStringExtra(BluetoothLeService.EXTRA_DATA_SYSTOLIC_PROGRESS))
                 } else if (intent.getIntExtra(BluetoothLeService.EXTRA_DATA_BP_SYSTOLIC, 0) !== 0 && intent.getIntExtra(BluetoothLeService.EXTRA_DATA_BP_DIASTOLIC, 0) !== 0 && intent.getIntExtra(BluetoothLeService.EXTRA_DATA_BP_HEART_RATE, 0) !== 0) {
+                    readingUpdateView.setText(Integer.parseInt(intent.getStringExtra(BluetoothLeService.EXTRA_DATA_BP_SYSTOLIC)))
                     this@TechnaxxBP.updateBPValues(intent.getIntExtra(BluetoothLeService.EXTRA_DATA_BP_SYSTOLIC, 0), intent.getIntExtra(BluetoothLeService.EXTRA_DATA_BP_DIASTOLIC, 0), intent.getIntExtra(BluetoothLeService.EXTRA_DATA_BP_HEART_RATE, 0))
                 } else if (intent.getStringExtra(BluetoothLeService.EXTRA_DATA_ERROR) != null) {
                     this@TechnaxxBP.updateErrorDetails(intent.getStringExtra(BluetoothLeService.EXTRA_DATA_ERROR))
@@ -83,28 +93,28 @@ class TechnaxxBP : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_device)
 
-        mDeviceAddress  = intent.getStringExtra("deviceId")
+        mDeviceAddress  = intent.getStringExtra("address")
         bindService(Intent(this, BluetoothLeService::class.java), this.mServiceConnection, Context.BIND_AUTO_CREATE)
         registerReceiver(this.mGattUpdateReceiver, makeGattUpdateIntentFilter());
 
-        graph.setTitle("Measurement")
-
-        graph.pivotY = 0F
-        graph.pivotX = 0F
-        val viewport = graph.viewport
-        viewport.setMaxX(80.0)
-        viewport.setMinX(0.0)
-        viewport.setMinY(0.0)
-        viewport.setMaxY(200.0)
-        viewport.isXAxisBoundsManual = true
-        viewport.isYAxisBoundsManual = true
-
-        graph.gridLabelRenderer.isHorizontalLabelsVisible = false
-        graph.gridLabelRenderer.gridColor = R.color.switch_thumb_material_light
-        graph.gridLabelRenderer.gridStyle = GridLabelRenderer.GridStyle.NONE
-
-        prepareSeries(mSeries2, Color.GRAY)
-        graph.addSeries(mSeries2)
+//        graph.setTitle("Measurement")
+//
+//        graph.pivotY = 0F
+//        graph.pivotX = 0F
+//        val viewport = graph.viewport
+//        viewport.setMaxX(80.0)
+//        viewport.setMinX(0.0)
+//        viewport.setMinY(0.0)
+//        viewport.setMaxY(200.0)
+//        viewport.isXAxisBoundsManual = true
+//        viewport.isYAxisBoundsManual = true
+//
+//        graph.gridLabelRenderer.isHorizontalLabelsVisible = false
+//        graph.gridLabelRenderer.gridColor = R.color.switch_thumb_material_light
+//        graph.gridLabelRenderer.gridStyle = GridLabelRenderer.GridStyle.NONE
+//
+//        prepareSeries(mSeries2, Color.GRAY)
+//        graph.addSeries(mSeries2)
 
 //        prepareSeries(mSeries3, Color.BLACK);
 //        graph.addSeries(mSeries3)
@@ -113,6 +123,7 @@ class TechnaxxBP : AppCompatActivity() {
 
         startMeasurement.setOnClickListener((object: View.OnClickListener {
             override fun onClick(p0: View?) {
+                readingUpdateView.setText("0")
                 for (gattService in this@TechnaxxBP?.mBluetoothLeService?.getSupportedGattServices()!!) {
                     if (gattService.getUuid().toString() == GattAttributes.SERVICE_UUID) {
                         for (gattCharacteristic in gattService.getCharacteristics()) {
@@ -146,6 +157,17 @@ class TechnaxxBP : AppCompatActivity() {
         super.onResume()
 
     }
+
+    override fun onPause() {
+        super.onPause()
+        unregisterReceiver(mGattUpdateReceiver)
+    }
+
+    override fun onDestroy() {
+        super.onDestroy()
+        unbindService(mServiceConnection)
+    }
+
     fun makeGattUpdateIntentFilter(): IntentFilter {
         val intentFilter = IntentFilter()
         intentFilter.addAction(BluetoothLeService.ACTION_GATT_CONNECTED)
@@ -205,6 +227,16 @@ class TechnaxxBP : AppCompatActivity() {
 //            this.txtDevieBatteryStatus.setText("-")
         }
     }
+
+//    private fun updateConnectionStatus(data: String?) {
+//        if (data != null) {
+//            progressafterconnection.progress = Integer.parseInt(data)
+//            progressText.setText(getPercentage(data));
+//        } else {
+////            this.txtDevieBatteryStatus.setText("-")
+//        }
+//    }
+
     private fun getPercentage(data: String?): String {
         return data +" %"
     }

@@ -1,10 +1,7 @@
 <resources>
     <string name="app_name">Planwito</string>
-    <string name="action_settings">Settings</string>
 
     <string name="title_activity_fullscreen">Planwito</string>
-    <string name="dummy_button">Dummy Button</string>
-    <string name="dummy_content">DUMMY\nCONTENT</string>
     <string name="title_activity_home">HomeActivity</string>
     <string name="ble_not_supported">Bluetooth not accesible</string>
     <string name="disconnected">Disconnected</string>
@@ -13,9 +10,5 @@
     <string name="scanning">Scanning</string>
     <string name="connected">Connected</string>
     <string name="start">Start</string>
-    <string-array name="device_names">
-        <item>Technaxx BP</item>
-        <item>Cooey Body Analyzer</item>
-    </string-array>
 
 </resources>

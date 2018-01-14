@@ -67,7 +67,7 @@ public class BluetoothLeService extends Service {
                 intentAction = BluetoothLeService.ACTION_GATT_CONNECTED;
                 BluetoothLeService.this.mConnectionState = 2;
                 BluetoothLeService.this.broadcastUpdate(intentAction);
-                Log.i(BluetoothLeService.TAG, "Connected to GATT server.");
+                Log.i(BluetoothLeService.TAG, "Connected to GATT server. Ohh Yeah !!");
                 Log.i(BluetoothLeService.TAG, "Attempting to start service discovery:" + BluetoothLeService.this.mBluetoothGatt.discoverServices());
             } else if (newState == 0) {
                 intentAction = BluetoothLeService.ACTION_GATT_DISCONNECTED;
@@ -79,8 +79,10 @@ public class BluetoothLeService extends Service {
 
         public void onServicesDiscovered(BluetoothGatt gatt, int status) {
             if (status == 0) {
+                Log.w("onServicesDiscovered", "onServicesDiscovered status = 0") ;
                 BluetoothLeService.this.broadcastUpdate(BluetoothLeService.ACTION_GATT_SERVICES_DISCOVERED);
             } else {
+                Log.w("onServicesDiscovered", "onServicesDiscovered status != 0") ;
                 Log.w(BluetoothLeService.TAG, "onServicesDiscovered received: " + status);
             }
         }
@@ -249,6 +251,7 @@ public class LocalBinder extends Binder {
         if (this.mBluetoothGatt == null) {
             return null;
         }
+
         return this.mBluetoothGatt.getServices();
     }
 

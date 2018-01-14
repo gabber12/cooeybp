@@ -39,6 +39,7 @@
             android:enabled="true" />
 
         <activity android:name=".activity.TechnaxxBP"></activity>
+        <activity android:name=".activity.CooeyBodyAnalyzer"></activity>
         <meta-data
             android:name="io.fabric.ApiKey"
             android:value="ed09b6fdec3cf0d4eac686dfa0cc7c209cda8f4f" />

@@ -5,15 +5,27 @@ package com.gabber12.cooey.cooey_bp.activity;
  */
 
 public class Device {
-    public String deviceId;
+    public String address;
     public String deviceName;
     public String deviceLabel;
+
+
+
+    public String name;
+   public int sensorType;
+    public String pairFlags;
+    private int key_id;
+    private int rssi;
+    private String scanRecord;
+    private String modelNumber;
+
+
     public Device() {
 
         /// inject enum device type
     }
     public Device(String id, String name, String label) {
-        this.deviceId = id;
+        this.address = id;
         this.deviceName = name;
         this.deviceLabel = label;
     }

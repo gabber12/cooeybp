@@ -36,7 +36,7 @@ public class CustomList extends ArrayAdapter<String> {
         txtTitle.setText(web.get(position).deviceName);
         TextView txtTitle1 = (TextView) rowView.findViewById(R.id.macAddress);
 
-        txtTitle1.setText(web.get(position).deviceId);
+        txtTitle1.setText(web.get(position).address);
         return rowView;
     }
 
