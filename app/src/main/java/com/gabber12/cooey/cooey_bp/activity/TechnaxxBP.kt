@@ -19,6 +19,9 @@ import kotlinx.android.synthetic.main.activity_device.*
 import com.jjoe64.graphview.series.LineGraphSeries
 import android.graphics.DashPathEffect
 import android.graphics.Paint
+import android.widget.TextView
+import com.gabber12.cooey.cooey_bp.QrCodeScannerActivity
+import com.gabber12.cooey.cooey_bp.service.BpReadings
 import com.jjoe64.graphview.GridLabelRenderer
 
 
@@ -26,9 +29,11 @@ class TechnaxxBP : AppCompatActivity() {
     private var mBluetoothLeService: BluetoothLeService? = null
     private var mDeviceAddress: String? = null
     private var mConnected: Boolean = false
-    private var mSeries2: LineGraphSeries<DataPointInterface> = LineGraphSeries()
-    private var mSeries3: LineGraphSeries<DataPointInterface> = LineGraphSeries()
-    private var mSeries4: LineGraphSeries<DataPointInterface> = LineGraphSeries()
+    private var  isCompleted: Boolean = false;
+    private var finalReadings: BpReadings? = null
+//    private var mSeries2: LineGraphSeries<DataPointInterface> = LineGraphSeries()
+//    private var mSeries3: LineGraphSeries<DataPointInterface> = LineGraphSeries()
+//    private var mSeries4: LineGraphSeries<DataPointInterface> = LineGraphSeries()
 
 
     private var mNotifyCharacteristic: BluetoothGattCharacteristic? = null
@@ -55,6 +60,7 @@ class TechnaxxBP : AppCompatActivity() {
                     this@TechnaxxBP.updateDataSystolicValues(intent.getStringExtra(BluetoothLeService.EXTRA_DATA_SYSTOLIC_PROGRESS))
                 } else if (intent.getIntExtra(BluetoothLeService.EXTRA_DATA_BP_SYSTOLIC, 0) !== 0 && intent.getIntExtra(BluetoothLeService.EXTRA_DATA_BP_DIASTOLIC, 0) !== 0 && intent.getIntExtra(BluetoothLeService.EXTRA_DATA_BP_HEART_RATE, 0) !== 0) {
                     this@TechnaxxBP.updateBPValues(intent.getIntExtra(BluetoothLeService.EXTRA_DATA_BP_SYSTOLIC, 0), intent.getIntExtra(BluetoothLeService.EXTRA_DATA_BP_DIASTOLIC, 0), intent.getIntExtra(BluetoothLeService.EXTRA_DATA_BP_HEART_RATE, 0))
+                    isCompleted = true
                 } else if (intent.getStringExtra(BluetoothLeService.EXTRA_DATA_ERROR) != null) {
                     this@TechnaxxBP.updateErrorDetails(intent.getStringExtra(BluetoothLeService.EXTRA_DATA_ERROR))
                 }
@@ -79,6 +85,7 @@ class TechnaxxBP : AppCompatActivity() {
             this@TechnaxxBP.mBluetoothLeService = null;
         }
     })
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_device)
@@ -87,24 +94,24 @@ class TechnaxxBP : AppCompatActivity() {
         bindService(Intent(this, BluetoothLeService::class.java), this.mServiceConnection, Context.BIND_AUTO_CREATE)
         registerReceiver(this.mGattUpdateReceiver, makeGattUpdateIntentFilter());
 
-        graph.setTitle("Measurement")
-
-        graph.pivotY = 0F
-        graph.pivotX = 0F
-        val viewport = graph.viewport
-        viewport.setMaxX(80.0)
-        viewport.setMinX(0.0)
-        viewport.setMinY(0.0)
-        viewport.setMaxY(200.0)
-        viewport.isXAxisBoundsManual = true
-        viewport.isYAxisBoundsManual = true
-
-        graph.gridLabelRenderer.isHorizontalLabelsVisible = false
-        graph.gridLabelRenderer.gridColor = R.color.switch_thumb_material_light
-        graph.gridLabelRenderer.gridStyle = GridLabelRenderer.GridStyle.NONE
-
-        prepareSeries(mSeries2, Color.GRAY)
-        graph.addSeries(mSeries2)
+//        graph.setTitle("Measurement")
+//
+//        graph.pivotY = 0F
+//        graph.pivotX = 0F
+//        val viewport = graph.viewport
+//        viewport.setMaxX(80.0)
+//        viewport.setMinX(0.0)
+//        viewport.setMinY(0.0)
+//        viewport.setMaxY(200.0)
+//        viewport.isXAxisBoundsManual = true
+//        viewport.isYAxisBoundsManual = true
+//
+//        graph.gridLabelRenderer.isHorizontalLabelsVisible = false
+//        graph.gridLabelRenderer.gridColor = R.color.switch_thumb_material_light
+//        graph.gridLabelRenderer.gridStyle = GridLabelRenderer.GridStyle.NONE
+//
+//        prepareSeries(mSeries2, Color.GRAY)
+//        graph.addSeries(mSeries2)
 
 //        prepareSeries(mSeries3, Color.BLACK);
 //        graph.addSeries(mSeries3)
@@ -113,6 +120,14 @@ class TechnaxxBP : AppCompatActivity() {
 
         startMeasurement.setOnClickListener((object: View.OnClickListener {
             override fun onClick(p0: View?) {
+                if(isCompleted) {
+                    val intent = Intent(applicationContext, QrCodeScannerActivity::class.java)
+                    intent.putExtra("SYSTOLIC",finalReadings?.systolic )
+                    intent.putExtra("DISTOLIC",finalReadings?.distolic )
+                    intent.putExtra("HEART_RATE",finalReadings?.heartRate )
+                    startActivity(intent)
+                    return;
+                }
                 for (gattService in this@TechnaxxBP?.mBluetoothLeService?.getSupportedGattServices()!!) {
                     if (gattService.getUuid().toString() == GattAttributes.SERVICE_UUID) {
                         for (gattCharacteristic in gattService.getCharacteristics()) {
@@ -146,6 +161,18 @@ class TechnaxxBP : AppCompatActivity() {
         super.onResume()
 
     }
+
+    override fun onDestroy() {
+        super.onDestroy()
+        unbindService(mServiceConnection)
+
+    }
+
+    override fun onPause() {
+        super.onPause()
+        unregisterReceiver(mGattUpdateReceiver)
+    }
+
     fun makeGattUpdateIntentFilter(): IntentFilter {
         val intentFilter = IntentFilter()
         intentFilter.addAction(BluetoothLeService.ACTION_GATT_CONNECTED)
@@ -210,10 +237,12 @@ class TechnaxxBP : AppCompatActivity() {
     }
 
     private fun updateDataSystolicValues(stringExtra: String?) {
-        if (stringExtra != null) {
 
-            mSeries2.appendData(DataPoint(progress1*1.0, Integer.parseInt(stringExtra)*1.0), false , 100)
-            progress1 ++;
+        if (stringExtra != null) {
+            val currentReadingText = findViewById<TextView>(R.id.current_reading)
+            currentReadingText.setText(stringExtra)
+//            mSeries2.appendData(DataPoint(progress1*1.0, Integer.parseInt(stringExtra)*1.0), false , 100)
+//            progress1 ++;
 
 //            this.txtProgressStatus.setText(stringExtra)
 //            this.button.setText("Stop")
@@ -229,6 +258,8 @@ class TechnaxxBP : AppCompatActivity() {
 //        this.dystolic = diastolicValue
 //        this.heartRate = heartRateValue
 //        this.txtProgressStatus.setText(systolicValue.toString() + "/" + diastolicValue + "mmHg")
+        finalReadings = BpReadings(systolicValue, diastolicValue, heartRateValue)
+        findViewById<TextView>(R.id.startMeasurement).setText("Upload Measurements")
         systolicText.setText(""+systolicValue)
         distolicText.setText(""+diastolicValue)
         hrText.setText(""+heartRateValue)

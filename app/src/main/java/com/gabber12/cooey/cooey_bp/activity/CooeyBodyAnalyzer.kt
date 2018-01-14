@@ -12,7 +12,7 @@ import android.support.v7.app.AppCompatActivity
 import android.util.Log
 import android.view.View
 import com.gabber12.cooey.cooey_bp.R
-import com.gabber12.cooey.cooey_bp.R.id.graph
+//import com.gabber12.cooey.cooey_bp.R.id.graph
 import com.gabber12.cooey.cooey_bp.service.BluetoothLeService
 import com.gabber12.cooey.cooey_bp.service.GattAttributes
 import com.jjoe64.graphview.GridLabelRenderer
