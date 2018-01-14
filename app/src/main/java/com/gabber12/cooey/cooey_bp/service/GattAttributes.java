@@ -14,6 +14,9 @@ public class GattAttributes {
         public static String SERVICE_READ_CHANNEL = "00002af0-0000-1000-8000-00805f9b34fb";
 
 
+
+    public static final String UUID_PO3_SERVICE = "0000ff70-0000-1000-8000-00805f9b34fb";
+    public static final String UUID_PO3_SERVICE_128 = "636f6d2e-6a69-7561-6e2e-504f56313100";
         public static byte[] hexStringToByteArray(String s) {
             int len = s.length();
             byte[] data = new byte[(len / 2)];

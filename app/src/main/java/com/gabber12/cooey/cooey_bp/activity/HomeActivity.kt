@@ -158,16 +158,22 @@ class HomeActivity : AppCompatActivity() {
                 // get device type
                 var device: Device = deviceList[position]
 
-                var activity = TechnaxxBP::class.java
-               if(device.deviceName == "Technaxx BP") {
-                    var activity =  TechnaxxBP::class.java
-                } else {
-                   var activity =  CooeyBodyAnalyzer::class.java
-                }
+                var activity = IhealthOximeter::class.java
+               if(device.deviceName.equals("Cooey BP Meter")) {
+                   val intent = Intent(applicationContext, TechnaxxBP::class.java) //rep
+                   intent.putExtra("deviceId", deviceList.get(position).deviceId)
+                   startActivity(intent)
+                } else if(device.deviceName.equals("Cooey Body Analyzer")){
+                   val intent = Intent(applicationContext, CooeyBodyAnalyzer::class.java) //rep
+                   intent.putExtra("deviceId", deviceList.get(position).deviceId)
+                   startActivity(intent)
+                }else{
+                   val intent = Intent(applicationContext, IhealthOximeter::class.java) //rep
+                   intent.putExtra("deviceId", deviceList.get(position).deviceId)
+                   startActivity(intent)
+               }
 
-                val intent = Intent(applicationContext, activity) //rep
-                intent.putExtra("deviceId", deviceList.get(position).deviceId)
-                startActivity(intent)
+
             }
         });
         bindService(Intent(this, BluetoothLeService::class.java), this.mServiceConnection, Context.BIND_AUTO_CREATE)

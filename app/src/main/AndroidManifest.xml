@@ -45,7 +45,10 @@
             android:name="io.fabric.ApiKey"
             android:value="ed09b6fdec3cf0d4eac686dfa0cc7c209cda8f4f" />
 
-        <activity android:name=".QrCodeScannerActivity"></activity>
+        <activity android:name=".QrCodeScannerActivity" />
+
+        <activity android:name=".activity.IhealthOximeter"></activity>
+        <activity android:name=".activity.CooeyBodyAnalyzer"></activity>
     </application>
 
 </manifest>
