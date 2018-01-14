@@ -113,7 +113,7 @@
 
                 <TextView
                     android:id="@+id/systolicText"
-                    android:text="120 "
+                    android:text=""
                     android:padding="16sp"
                     android:textSize="20sp" />
             </TableRow>
@@ -121,13 +121,13 @@
             <TableRow>
 
                 <TextView
-                    android:text="Distolic"
+                    android:text="Diastolic"
                     android:padding="16sp"
                     android:textSize="20sp" />
 
                 <TextView
                     android:id="@+id/distolicText"
-                    android:text="80"
+                    android:text=""
                     android:padding="16sp"
                     android:textSize="20sp" />
             </TableRow>
@@ -135,13 +135,13 @@
             <TableRow>
 
                 <TextView
-                    android:text="Hear rate"
+                    android:text="Heart rate"
                     android:padding="16sp"
                     android:textSize="20sp" />
 
                 <TextView
                     android:id="@+id/hrText"
-                    android:text="72"
+                    android:text=""
                     android:padding="16sp"
                     android:textSize="20sp" />
             </TableRow>

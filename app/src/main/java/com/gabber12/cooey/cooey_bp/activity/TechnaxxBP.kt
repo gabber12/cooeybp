@@ -120,7 +120,7 @@ class TechnaxxBP : AppCompatActivity() {
 
         startMeasurement.setOnClickListener((object: View.OnClickListener {
             override fun onClick(p0: View?) {
-                if(true || isCompleted) {
+                if( isCompleted) {
                     val intent = Intent(applicationContext, QrCodeScannerActivity::class.java)
                     intent.putExtra("SYSTOLIC",finalReadings?.systolic )
                     intent.putExtra("DISTOLIC",finalReadings?.distolic )
