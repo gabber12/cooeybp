@@ -113,7 +113,7 @@
 
                 <TextView
                     android:id="@+id/systolicText"
-                    android:text=""
+                    android:text="--"
                     android:padding="16sp"
                     android:textSize="20sp" />
             </TableRow>
@@ -127,7 +127,7 @@
 
                 <TextView
                     android:id="@+id/hrText"
-                    android:text=""
+                    android:text="--"
                     android:padding="16sp"
                     android:textSize="20sp" />
             </TableRow>

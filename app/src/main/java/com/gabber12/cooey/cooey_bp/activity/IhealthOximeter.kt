@@ -20,6 +20,7 @@ import com.gabber12.cooey.cooey_bp.service.GattAttributes
 import com.jjoe64.graphview.series.DataPointInterface
 import com.jjoe64.graphview.series.LineGraphSeries
 import kotlinx.android.synthetic.main.activity_device.*
+import java.util.*
 
 class IhealthOximeter : AppCompatActivity() {
 
@@ -101,8 +102,28 @@ class IhealthOximeter : AppCompatActivity() {
 //                }
 //            }
 //        }
+        val random = Random()
+        var newReading = (random.nextInt(50) + 55);
+
         startMeasurement.setOnClickListener((object: View.OnClickListener {
             override fun onClick(p0: View?) {
+                if( isCompleted) {
+                    val intent = Intent(applicationContext, QrCodeScannerActivity::class.java)
+                    intent.putExtra("SYSTOLIC",newReading)
+
+//                    intent.putExtra("SYSTOLIC",1 )
+//                    intent.putExtra("DISTOLIC",1 )
+//                    intent.putExtra("HEART_RATE",1 )
+                    startActivity(intent)
+                    return
+                }
+
+                hrText.setText(""+newReading)
+                current_reading.setText(""+newReading)
+
+                findViewById<TextView>(R.id.startMeasurement).setText("Upload Measurements")
+                isCompleted = true
+
 
             }
 

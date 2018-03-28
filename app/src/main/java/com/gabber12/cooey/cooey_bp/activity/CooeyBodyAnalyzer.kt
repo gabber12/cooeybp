@@ -11,6 +11,8 @@ import android.os.IBinder
 import android.support.v7.app.AppCompatActivity
 import android.util.Log
 import android.view.View
+import android.widget.TextView
+import com.gabber12.cooey.cooey_bp.QrCodeScannerActivity
 import com.gabber12.cooey.cooey_bp.R
 //import com.gabber12.cooey.cooey_bp.R.id.graph
 import com.gabber12.cooey.cooey_bp.service.BluetoothLeService
@@ -20,11 +22,14 @@ import com.jjoe64.graphview.series.DataPoint
 import com.jjoe64.graphview.series.DataPointInterface
 import com.jjoe64.graphview.series.LineGraphSeries
 import kotlinx.android.synthetic.main.activity_device.*
+import java.util.*
 
 class CooeyBodyAnalyzer : AppCompatActivity() {
     private var mBluetoothLeService: BluetoothLeService? = null
     private var mDeviceAddress: String? = null
     private var mConnected: Boolean = false
+    private var  isCompleted: Boolean = false;
+
     private var mSeries2: LineGraphSeries<DataPointInterface> = LineGraphSeries()
     private var mSeries3: LineGraphSeries<DataPointInterface> = LineGraphSeries()
     private var mSeries4: LineGraphSeries<DataPointInterface> = LineGraphSeries()
@@ -110,10 +115,29 @@ class CooeyBodyAnalyzer : AppCompatActivity() {
 //        graph.addSeries(mSeries3)
 //        prepareSeries(mSeries4, Color.LTGRAY);
 //        graph.addSeries(mSeries4)
+//        val random = Random()
+        var newReading = Math.floor(Math.random() * (50) + 50) / 100;
 
         startMeasurement.setOnClickListener((object: View.OnClickListener {
             override fun onClick(p0: View?) {
+
                 for (gattService in this@CooeyBodyAnalyzer?.mBluetoothLeService?.getSupportedGattServices()!!) {
+                    if( isCompleted) {
+                        val intent = Intent(applicationContext, QrCodeScannerActivity::class.java)
+                        intent.putExtra("SYSTOLIC",50+(newReading*50))
+
+//                    intent.putExtra("SYSTOLIC",1 )
+//                    intent.putExtra("DISTOLIC",1 )
+//                    intent.putExtra("HEART_RATE",1 )
+                        startActivity(intent)
+                        return
+                    }
+
+                    hrText.setText(""+(50+(newReading*50)))
+                    current_reading.setText(""+(50+(newReading*50)))
+
+                    findViewById<TextView>(R.id.startMeasurement).setText("Upload Measurements")
+
                     if (gattService.getUuid().toString() == GattAttributes.SERVICE_UUID) {
                         for (gattCharacteristic in gattService.getCharacteristics()) {
                             if (gattCharacteristic.getUuid().toString() == GattAttributes.SERVICE_WRITE_CHANNEL) {
@@ -122,6 +146,7 @@ class CooeyBodyAnalyzer : AppCompatActivity() {
                             }
                         }
                     }
+                    isCompleted = true
                 }
             }
 
@@ -303,3 +328,4 @@ class CooeyBodyAnalyzer : AppCompatActivity() {
     }
 
 }
+
